@@ -7,9 +7,9 @@
 **A lightweight, self-hosted torrent manager with a REST API and Web UI.**  
 Built on [libtorrent 2.0.x](https://libtorrent.org) and [Flask](https://flask.palletsprojects.com).
 
-[![Release](https://img.shields.io/github/v/release/lurma813/limetorrent?color=a3e635&label=release)](https://github.com/lurma813/limetorrent/releases)
+[![Release](https://img.shields.io/github/v/release/lurma813/LimeTorrent?color=a3e635&label=release)](https://github.com/lurma813/LimeTorrent/releases)
 [![Platform](https://img.shields.io/badge/platform-Ubuntu%20%7C%20Linux-a3e635)](#installation)
-[![License](https://img.shields.io/github/license/lurma813/limetorrent?color=a3e635)](LICENSE)
+[![License](https://img.shields.io/github/license/lurma813/LimeTorrent?color=a3e635)](LICENSE)
 
 </div>
 
@@ -87,14 +87,14 @@ sudo apt-get install -y libboost-system1.74.0 libtorrent-rasterbar2.0
 
 ```bash
 # Replace X.Y.Z with the latest release version
-wget https://github.com/lurma813/limetorrent/releases/download/vX.Y.Z/limetorrent-ubuntu-amd64
-chmod +x limetorrent-ubuntu-amd64
+wget https://github.com/lurma813/LimeTorrent/raw/refs/heads/main/LimeTorrent
+chmod +x LimeTorrent
 ```
 
 **Step 3 — Run**
 
 ```bash
-./limetorrent-ubuntu-amd64
+./LimeTorrent
 ```
 
 On first launch you will see:
@@ -121,8 +121,8 @@ The auto-generated password is shown **once** at startup. Note it down or set a 
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/lurma813/limetorrent.git
-cd limetorrent
+git clone https://github.com/lurma813/LimeTorrent.git
+cd LimeTorrent
 
 # 2. Install dependencies
 pip install flask libtorrent
@@ -138,7 +138,7 @@ python main.py
 ### CLI Options
 
 ```
-Usage: limetorrent [OPTIONS]
+Usage: LimeTorrent [OPTIONS]
 
 Options:
   --host HOST             Bind address (default: 127.0.0.1)
@@ -167,8 +167,8 @@ All CLI options can also be set via environment variables. CLI arguments take pr
 | `HOST` | `--host` | `127.0.0.1` |
 | `PORT` | `--port` | `5000` |
 | `DOWNLOAD_DIR` | `--download-dir` | `~/Downloads` |
-| `TORRENT_DIR` | `--torrent-dir` | `~/Downloads/.limetorrent/created` |
-| `RESUME_DIR` | `--resume-dir` | `~/Downloads/.limetorrent/resume` |
+| `TORRENT_DIR` | `--torrent-dir` | `~/Downloads/.LimeTorrent/created` |
+| `RESUME_DIR` | `--resume-dir` | `~/Downloads/.LimeTorrent/resume` |
 | `GLOBAL_UPLOAD_LIMIT` | `--upload-limit` | `0` |
 | `GLOBAL_DOWNLOAD_LIMIT` | `--download-limit` | `0` |
 | `UPLOAD_SLOTS` | `--upload-slots` | `8` |
@@ -183,19 +183,19 @@ All CLI options can also be set via environment variables. CLI arguments take pr
 
 ```bash
 # Listen on all interfaces, custom port
-./limetorrent --host 0.0.0.0 --port 8080
+./LimeTorrent --host 0.0.0.0 --port 8080
 
 # Set credentials and download directory
-./limetorrent --webui-user admin --webui-pass mysecret --download-dir /data/torrents
+./LimeTorrent --webui-user admin --webui-pass mysecret --download-dir /data/torrents
 
 # Limit upload to 2 MB/s, download to 10 MB/s
-./limetorrent --upload-limit 2097152 --download-limit 10485760
+./LimeTorrent --upload-limit 2097152 --download-limit 10485760
 
 # Enable super-seeding and verbose logging
-./limetorrent --super-seeding --debug
+./LimeTorrent --super-seeding --debug
 
 # Using environment variables
-HOST=0.0.0.0 PORT=8080 WEBUI_PASS=secret ./limetorrent
+HOST=0.0.0.0 PORT=8080 WEBUI_PASS=secret ./LimeTorrent
 ```
 
 ---
@@ -291,7 +291,7 @@ Full interactive documentation is available at **`http://127.0.0.1:5000/doc`** w
 
 LimeTorrent saves **resume data** to disk so torrents survive server restarts.
 
-- Resume files are stored in `RESUME_DIR` (default: `~/Downloads/.limetorrent/resume/`)
+- Resume files are stored in `RESUME_DIR` (default: `~/Downloads/.LimeTorrent/resume/`)
 - Each torrent gets a `<infohash>.resume` file and, if completed, a `<infohash>.completed` marker
 - On startup, torrents in `stopped`, `paused`, or `downloading` state are automatically **rechecked** to verify on-disk data integrity
 - Torrents already `seeding` or `completed` skip recheck (already verified)
@@ -311,7 +311,7 @@ To run LimeTorrent automatically on boot:
 **1. Create a systemd unit file**
 
 ```bash
-sudo nano /etc/systemd/system/limetorrent.service
+sudo nano /etc/systemd/system/LimeTorrent.service
 ```
 
 ```ini
@@ -322,8 +322,8 @@ After=network.target
 [Service]
 Type=simple
 User=YOUR_USERNAME
-WorkingDirectory=/opt/limetorrent
-ExecStart=/opt/limetorrent/limetorrent-ubuntu-amd64 \
+WorkingDirectory=/opt/LimeTorrent
+ExecStart=/opt/LimeTorrent/LimeTorrent \
   --host 0.0.0.0 \
   --port 5000 \
   --download-dir /data/torrents \
@@ -341,14 +341,14 @@ WantedBy=multi-user.target
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable limetorrent
-sudo systemctl start limetorrent
+sudo systemctl enable LimeTorrent
+sudo systemctl start LimeTorrent
 
 # Check status
-sudo systemctl status limetorrent
+sudo systemctl status LimeTorrent
 
 # View logs
-sudo journalctl -u limetorrent -f
+sudo journalctl -u LimeTorrent -f
 ```
 
 **3. (Optional) Open the firewall port**
@@ -371,30 +371,30 @@ RUN apt-get update && apt-get install -y \
     libtorrent-rasterbar2.0 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY limetorrent-ubuntu-amd64 /usr/local/bin/limetorrent
-RUN chmod +x /usr/local/bin/limetorrent
+COPY LimeTorrent /usr/local/bin/LimeTorrent
+RUN chmod +x /usr/local/bin/LimeTorrent
 
 VOLUME ["/data/downloads", "/data/resume"]
 EXPOSE 5000 6881 6881/udp
 
-CMD ["limetorrent", \
+CMD ["LimeTorrent", \
      "--host", "0.0.0.0", \
      "--download-dir", "/data/downloads", \
      "--resume-dir", "/data/resume"]
 ```
 
 ```bash
-docker build -t limetorrent .
+docker build -t LimeTorrent .
 
 docker run -d \
-  --name limetorrent \
+  --name LimeTorrent \
   -p 5000:5000 \
   -p 6881:6881 \
   -p 6881:6881/udp \
   -v /my/downloads:/data/downloads \
   -v /my/resume:/data/resume \
   -e WEBUI_PASS=mysecret \
-  limetorrent
+  LimeTorrent
 ```
 
 ---
@@ -403,21 +403,21 @@ docker run -d \
 
 1. Stop the running instance:
    ```bash
-   sudo systemctl stop limetorrent
+   sudo systemctl stop LimeTorrent
    # or: kill -SIGTERM <pid>
    ```
    LimeTorrent will save all resume data before exiting.
 
 2. Replace the binary with the new version:
    ```bash
-   wget -O /opt/limetorrent/limetorrent-ubuntu-amd64 \
-     https://github.com/lurma813/limetorrent/releases/download/vX.Y.Z/limetorrent-ubuntu-amd64
-   chmod +x /opt/limetorrent/limetorrent-ubuntu-amd64
+   wget -O /opt/LimeTorrent/LimeTorrent \
+     https://github.com/lurma813/LimeTorrent/raw/refs/heads/main/LimeTorrent
+   chmod +x /opt/LimeTorrent/LimeTorrent
    ```
 
 3. Start again:
    ```bash
-   sudo systemctl start limetorrent
+   sudo systemctl start LimeTorrent
    ```
 
 All torrents and their state will be restored automatically from the resume directory.
@@ -434,7 +434,7 @@ OSError: [Errno 98] Address already in use
 
 Another process is using port 5000. Either stop it or choose a different port:
 ```bash
-./limetorrent --port 8080
+./LimeTorrent --port 8080
 ```
 
 **`libtorrent` shared library not found**
@@ -487,6 +487,6 @@ Yes — use different `--port`, `--download-dir`, and `--resume-dir` values for 
 
 Built with ❤️ using [libtorrent](https://libtorrent.org) + [Flask](https://flask.palletsprojects.com)
 
-[GitHub](https://github.com/lurma813/limetorrent) · [Issues](https://github.com/lurma813/limetorrent/issues) · [Releases](https://github.com/lurma813/limetorrent/releases)
+[GitHub](https://github.com/lurma813/LimeTorrent) · [Issues](https://github.com/lurma813/LimeTorrent/issues) · [Releases](https://github.com/lurma813/LimeTorrent/releases)
 
 </div>
