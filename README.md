@@ -2,7 +2,7 @@
 
 <img src="https://i.kek.sh/YZnRLgK4dJX.png" width="80" alt="LimeTorrent logo">
 
-# 🍋 LimeTorrent
+# LimeTorrent
 
 **A lightweight, self-hosted torrent manager with a REST API and Web UI.**  
 Built on [libtorrent 2.0.x](https://libtorrent.org) and [Flask](https://flask.palletsprojects.com).
