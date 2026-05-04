@@ -52,14 +52,12 @@ Built on [libtorrent 2.0.x](https://libtorrent.org) and [Flask](https://flask.pa
 
 ## Screenshots
 
-<div style="display: flex; justify-content: center; gap: 20px;">
-  <figure style="text-align: center;">
+<p align="center">
+  <span style="display: inline-flex; gap: 20px;">
     <img src="https://i.kek.sh/krUEExxQ1tK.png" width="300" alt="Light-Theme">
-  </figure>
-  <figure style="text-align: center;">
     <img src="https://i.kek.sh/zrjcjd0xGPS.png" width="300" alt="Dark-Theme">
-  </figure>
-</div>
+  </span>
+</p>
 
 ---
 
