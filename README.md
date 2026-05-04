@@ -7,8 +7,7 @@
 **A lightweight, self-hosted torrent manager with a REST API and Web UI.**  
 Built on [libtorrent 2.0.x](https://libtorrent.org) and [Flask](https://flask.palletsprojects.com).
 
-[![Release](https://img.shields.io/github/v/release/lurma813/LimeTorrent?color=a3e635&label=release)](https://github.com/lurma813/LimeTorrent/releases)
-[![Platform](https://img.shields.io/badge/platform-Ubuntu%20%7C%20Linux-a3e635)](#installation)
+[![Platform](https://img.shields.io/badge/platform-Ubuntu%20%7C%20Linux%20%7C%20Windows-a3e635)](#installation)
 [![License](https://img.shields.io/github/license/lurma813/LimeTorrent?color=a3e635)](LICENSE)
 
 </div>
