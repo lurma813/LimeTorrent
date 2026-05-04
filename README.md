@@ -70,36 +70,16 @@ Built on [libtorrent 2.0.x](https://libtorrent.org) and [Flask](https://flask.pa
 ---
 
 ## Installation
-
-### Pre-built Binary (Ubuntu)
-
-LimeTorrent ships as a **single self-contained binary** compiled for Ubuntu (64-bit). No Python installation is required.
-
-**Requirements:**
-- Ubuntu 20.04 / 22.04 / 24.04 (or compatible Debian-based distro)
-- `libtorrent-rasterbar` shared library (usually pre-installed or available via apt)
-
-**Step 1 — Install the libtorrent runtime library**
-
 ```bash
-sudo apt-get update
-sudo apt-get install -y libboost-system1.74.0 libtorrent-rasterbar2.0
+git clone https://github.com/lurma813/LimeTorrent
+sudo cp LimeTorrent/LimeTorrent /usr/local/bin
+sudo chmod u+rwx /usr/local/bin/LimeTorrent
+rm -r LimeTorrent/
 ```
-
-> If your Ubuntu version ships a different `libtorrent-rasterbar` version, install whichever is available (`apt-cache search libtorrent`).
-
-**Step 2 — Download the binary**
+**Run**
 
 ```bash
-# Replace X.Y.Z with the latest release version
-wget https://github.com/lurma813/LimeTorrent/raw/refs/heads/main/LimeTorrent
-chmod +x LimeTorrent
-```
-
-**Step 3 — Run**
-
-```bash
-./LimeTorrent
+LimeTorrent 
 ```
 
 On first launch you will see:
@@ -108,33 +88,12 @@ On first launch you will see:
 LimeTorrent running on http://127.0.0.1:5000
   - WebUI available at http://127.0.0.1:5000/webui
   - API Documentation at http://127.0.0.1:5000/doc
-  - WebUI user: admin  |  password: aB3xKz  (AUTO-GENERATED)
-  - API Key (for automation): a1b2c3d4e5f6...
+  - WebUI user: admin  |  password: aB3xKz...  (AUTO-GENERATED)
+  - API Key : a1b2c3d4e5f6...
   - libtorrent 2.0.9 | listen: 0.0.0.0:6881 | conns: 500
 ```
 
 The auto-generated password is shown **once** at startup. Note it down or set a custom password via `--webui-pass`.
-
----
-
-### Running from Source
-
-**Requirements:**
-- Python 3.10+
-- `libtorrent` Python bindings (`python3-libtorrent` or via pip)
-- `Flask` 3.x
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/lurma813/LimeTorrent.git
-cd LimeTorrent
-
-# 2. Install dependencies
-pip install flask libtorrent
-
-# 3. Run
-python main.py
-```
 
 ---
 
