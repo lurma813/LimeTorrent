@@ -29,9 +29,6 @@ Built on [libtorrent 2.0.x](https://libtorrent.org) and [Flask](https://flask.pa
 - [State Model](#state-model)
 - [Resume Persistence](#resume-persistence)
 - [Running as a Service (systemd)](#running-as-a-service-systemd)
-- [Running with Docker](#running-with-docker)
-- [Updating](#updating)
-- [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
 
 ---
@@ -68,12 +65,14 @@ Built on [libtorrent 2.0.x](https://libtorrent.org) and [Flask](https://flask.pa
 ---
 
 ## Installation
+**Ubuntu/Debian**
 ```bash
 git clone https://github.com/lurma813/LimeTorrent
 sudo cp LimeTorrent/LimeTorrent /usr/local/bin
 sudo chmod u+rwx /usr/local/bin/LimeTorrent
 rm -r LimeTorrent/
 ```
+
 **Run**
 
 ```bash
