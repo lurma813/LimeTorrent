@@ -84,9 +84,9 @@ On first launch you will see:
 LimeTorrent running on http://127.0.0.1:5000
   - WebUI available at http://127.0.0.1:5000/webui
   - API Documentation at http://127.0.0.1:5000/doc
-  - WebUI user: admin  |  password: aB3xKz...  (AUTO-GENERATED)
-  - API Key : a1b2c3d4e5f6...
-  - libtorrent 2.0.9 | listen: 0.0.0.0:6881 | conns: 500
+  - WebUI user: admin  |  password: lAQ90OeO...  (AUTO-GENERATED)
+  - API Key : cc69b715bbc953e69127697ab63...
+  - libtorrent 2.1.0.0 | listen: 127.0.0.1:6881 | conns: 500
 ```
 
 The auto-generated password is shown **once** at startup. Note it down or set a custom password via `--webui-pass`.
@@ -98,24 +98,86 @@ The auto-generated password is shown **once** at startup. Note it down or set a 
 ### CLI Options
 
 ```
-Usage: LimeTorrent [OPTIONS]
+usage: LimeTorrent [-h] [--host HOST] [--port PORT]
+                           [--download-dir DIR] [--torrent-dir DIR]
+                           [--resume-dir DIR] [--upload-limit BPS]
+                           [--download-limit BPS] [--upload-slots N]
+                           [--connections N] [--listen IFACE:PORT]
+                           [--webui-user USER] [--webui-pass PASS]
+                           [--super-seeding] [--debug]
 
-Options:
-  --host HOST             Bind address (default: 127.0.0.1)
-  --port PORT             Bind port   (default: 5000)
-  --download-dir DIR      Download directory (default: ~/Downloads)
-  --torrent-dir DIR       Output directory for created .torrent files
-  --resume-dir DIR        Resume data storage directory
-  --upload-limit BPS      Global upload limit in bytes/s  (0 = unlimited)
-  --download-limit BPS    Global download limit in bytes/s (0 = unlimited)
-  --upload-slots N        Max upload slots per torrent (default: 8)
-  --connections N         Max total connections (default: 500)
-  --listen IFACE:PORT     libtorrent listen interface (default: 0.0.0.0:6881)
-  --webui-user USER       WebUI username (default: admin)
-  --webui-pass PASS       WebUI password (default: random 6-char)
-  --super-seeding         Enable global super-seeding mode on startup
-  --debug                 Enable full debug logging (includes HTTP request log)
-  --help                  Show this help message and exit
+LimeTorrent — libtorrent 2.0.x REST API server.
+Manages torrents via HTTP: add (magnet/file/URL), pause, stop,
+delete (by hash or .torrent file), seed, create, monitor, and more.
+
+options:
+  -h, --help            show this help message and exit
+  --host HOST           Bind address (default: 127.0.0.1, env: HOST)
+  --port PORT           Bind port (default: 5000, env: PORT)
+  --download-dir DIR    Directory for downloaded files (env: DOWNLOAD_DIR)
+  --torrent-dir DIR     Directory for created .torrent files (env:
+                        TORRENT_DIR)
+  --resume-dir DIR      Directory for resume data (env: RESUME_DIR)
+  --upload-limit BPS    Global upload limit in bytes/s, 0=unlimited (env:
+                        GLOBAL_UPLOAD_LIMIT)
+  --download-limit BPS  Global download limit in bytes/s, 0=unlimited (env:
+                        GLOBAL_DOWNLOAD_LIMIT)
+  --upload-slots N      Max upload slots per torrent (default: 8, env:
+                        UPLOAD_SLOTS)
+  --connections N       Max connections limit (default: 500, env:
+                        CONNECTIONS_LIMIT)
+  --listen IFACE:PORT   libtorrent listen interface (default: 127.0.0.1:6881,
+                        env: LISTEN_INTERFACES)
+  --webui-user USER     WebUI username (default: admin, env: WEBUI_USER)
+  --webui-pass PASS     WebUI password (default: 6-char random, env:
+                        WEBUI_PASS)
+  --super-seeding       Enable global super-seeding mode on startup (env:
+                        SUPER_SEEDING)
+  --debug               Enable full debug logging incl. HTTP requests (env:
+                        DEBUG)
+
+API Endpoints (quick reference):
+  POST   /add/magnet            Add torrent via magnet link
+  POST   /add/file              Add torrent via .torrent file upload
+  POST   /add/url               Add torrent via direct .torrent URL
+  GET    /list                  List all torrents
+  GET    /status/<hash>         Status of a single torrent
+  GET    /files/<hash>          List files in torrent with priorities
+  POST   /files/<hash>          Set per-file priorities
+  GET    /monitor               Live streaming monitor
+  POST   /pause/<hash>          Pause torrent
+  POST   /stop/<hash>           Stop torrent (pause + save resume)
+  POST   /stop/file             Stop torrent identified by .torrent file
+  POST   /resume/<hash>         Resume torrent
+  DELETE /remove/<hash>         Remove torrent (add ?delete_files=1 to wipe data)
+  DELETE /remove/file           Remove torrent identified by .torrent file
+  POST   /limit/<hash>          Set per-torrent speed limits (JSON body)
+  POST   /limit/global          Set global speed limits
+  POST   /recheck/<hash>        Force recheck
+  POST   /announce/<hash>       Force re-announce
+  GET    /trackers/<hash>       List trackers
+  POST   /create                Create .torrent from local path
+  POST   /seed                  Seed local data with .torrent file
+  GET    /magnet/<hash>         Get magnet URI
+  POST   /save                  Persist resume data for all torrents
+  GET    /health                Health check
+  POST   /super_seed/<hash>     Toggle super-seeding mode for a torrent
+  POST   /super_seed/global     Set global super-seeding mode on/off
+  GET    /webui                 Web UI (browser)
+  GET    /webui/login           Login page
+  POST   /webui/login           Authenticate
+  POST   /webui/logout          Logout
+  GET    /doc                   API documentation
+
+Examples:
+  LimeTorrent --host 127.0.0.1 --port 8080
+  LimeTorrent --upload-limit 1048576 --download-limit 5242880
+  LimeTorrent --webui-user admin --webui-pass mysecret
+  curl -X POST http://127.0.0.1:5000/add/magnet -d '{"magnet":"magnet:?xt=..."}'
+  curl -X DELETE http://127.0.0.1:5000/remove/<hash>?delete_files=1
+  curl -X POST http://127.0.0.1:5000/stop/<hash>
+  curl -X POST -F torrent=@file.torrent http://127.0.0.1:5000/stop/file
+  curl -X DELETE -F torrent=@file.torrent http://127.0.0.1:5000/remove/file
 ```
 
 ### Environment Variables
@@ -127,8 +189,8 @@ All CLI options can also be set via environment variables. CLI arguments take pr
 | `HOST` | `--host` | `127.0.0.1` |
 | `PORT` | `--port` | `5000` |
 | `DOWNLOAD_DIR` | `--download-dir` | `~/Downloads` |
-| `TORRENT_DIR` | `--torrent-dir` | `~/Downloads/.LimeTorrent/created` |
-| `RESUME_DIR` | `--resume-dir` | `~/Downloads/.LimeTorrent/resume` |
+| `TORRENT_DIR` | `--torrent-dir` | `~/Downloads/.limetorrent/created` |
+| `RESUME_DIR` | `--resume-dir` | `~/Downloads/.limetorrent/resume` |
 | `GLOBAL_UPLOAD_LIMIT` | `--upload-limit` | `0` |
 | `GLOBAL_DOWNLOAD_LIMIT` | `--download-limit` | `0` |
 | `UPLOAD_SLOTS` | `--upload-slots` | `8` |
@@ -251,7 +313,7 @@ Full interactive documentation is available at **`http://127.0.0.1:5000/doc`** w
 
 LimeTorrent saves **resume data** to disk so torrents survive server restarts.
 
-- Resume files are stored in `RESUME_DIR` (default: `~/Downloads/.LimeTorrent/resume/`)
+- Resume files are stored in `RESUME_DIR` (default: `~/Downloads/.limetorrent/resume/`)
 - Each torrent gets a `<infohash>.resume` file and, if completed, a `<infohash>.completed` marker
 - On startup, torrents in `stopped`, `paused`, or `downloading` state are automatically **rechecked** to verify on-disk data integrity
 - Torrents already `seeding` or `completed` skip recheck (already verified)
@@ -323,9 +385,6 @@ sudo ufw allow 5000/tcp
 
 **Can I run LimeTorrent on Windows?**  
 Yes (tested on windows 11 23h2).
-
-**How do I change the API key?**  
-The API key is randomly generated at each startup. If you need a stable key, set a custom `WEBUI_PASS` and use session authentication, or manage the API key toggle via the Settings page in the Web UI.
 
 **Can I run multiple instances?**  
 Yes — use different `--port`, `--download-dir`, and `--resume-dir` values for each instance.
