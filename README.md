@@ -20,8 +20,6 @@ Built on [libtorrent 2.0.x](https://libtorrent.org) and [Flask](https://flask.pa
 - [Features](#features)
 - [Screenshots](#screenshots)
 - [Installation](#installation)
-  - [Pre-built Binary (Ubuntu)](#pre-built-binary-ubuntu)
-  - [Running from Source](#running-from-source)
 - [Usage](#usage)
   - [CLI Options](#cli-options)
   - [Environment Variables](#environment-variables)
@@ -147,19 +145,19 @@ All CLI options can also be set via environment variables. CLI arguments take pr
 
 ```bash
 # Listen on all interfaces, custom port
-./LimeTorrent --host 0.0.0.0 --port 8080
+LimeTorrent --host 0.0.0.0 --port 8080
 
 # Set credentials and download directory
-./LimeTorrent --webui-user admin --webui-pass mysecret --download-dir /data/torrents
+LimeTorrent --webui-user admin --webui-pass mysecret --download-dir /data/torrents
 
 # Limit upload to 2 MB/s, download to 10 MB/s
-./LimeTorrent --upload-limit 2097152 --download-limit 10485760
+LimeTorrent --upload-limit 2097152 --download-limit 10485760
 
 # Enable super-seeding and verbose logging
-./LimeTorrent --super-seeding --debug
+LimeTorrent --super-seeding --debug
 
 # Using environment variables
-HOST=0.0.0.0 PORT=8080 WEBUI_PASS=secret ./LimeTorrent
+HOST=0.0.0.0 PORT=8080 WEBUI_PASS=secret LimeTorrent
 ```
 
 ---
@@ -280,7 +278,7 @@ sudo nano /etc/systemd/system/LimeTorrent.service
 
 ```ini
 [Unit]
-Description=LimeTorrent - Torrent Manager
+Description=LimeTorrent - Torrent Server
 After=network.target
 
 [Service]
@@ -323,121 +321,10 @@ sudo ufw allow 5000/tcp
 
 ---
 
-## Running with Docker
-
-> A Dockerfile is not yet included in the release. The following example shows how to run the binary inside an Ubuntu container.
-
-```dockerfile
-FROM ubuntu:22.04
-
-RUN apt-get update && apt-get install -y \
-    libboost-system1.74.0 \
-    libtorrent-rasterbar2.0 \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY LimeTorrent /usr/local/bin/LimeTorrent
-RUN chmod +x /usr/local/bin/LimeTorrent
-
-VOLUME ["/data/downloads", "/data/resume"]
-EXPOSE 5000 6881 6881/udp
-
-CMD ["LimeTorrent", \
-     "--host", "0.0.0.0", \
-     "--download-dir", "/data/downloads", \
-     "--resume-dir", "/data/resume"]
-```
-
-```bash
-docker build -t LimeTorrent .
-
-docker run -d \
-  --name LimeTorrent \
-  -p 5000:5000 \
-  -p 6881:6881 \
-  -p 6881:6881/udp \
-  -v /my/downloads:/data/downloads \
-  -v /my/resume:/data/resume \
-  -e WEBUI_PASS=mysecret \
-  LimeTorrent
-```
-
----
-
-## Updating
-
-1. Stop the running instance:
-   ```bash
-   sudo systemctl stop LimeTorrent
-   # or: kill -SIGTERM <pid>
-   ```
-   LimeTorrent will save all resume data before exiting.
-
-2. Replace the binary with the new version:
-   ```bash
-   wget -O /opt/LimeTorrent/LimeTorrent \
-     https://github.com/lurma813/LimeTorrent/raw/refs/heads/main/LimeTorrent
-   chmod +x /opt/LimeTorrent/LimeTorrent
-   ```
-
-3. Start again:
-   ```bash
-   sudo systemctl start LimeTorrent
-   ```
-
-All torrents and their state will be restored automatically from the resume directory.
-
----
-
-## Troubleshooting
-
-**Port already in use**
-
-```
-OSError: [Errno 98] Address already in use
-```
-
-Another process is using port 5000. Either stop it or choose a different port:
-```bash
-./LimeTorrent --port 8080
-```
-
-**`libtorrent` shared library not found**
-
-```
-error while loading shared libraries: libtorrent-rasterbar.so.2.0
-```
-
-Install the missing runtime library:
-```bash
-sudo apt-get install libtorrent-rasterbar2.0
-# or for older Ubuntu:
-sudo apt-get install libtorrent-rasterbar9
-```
-
-**Torrent stuck at 0% / metadata**
-
-This is normal for magnet links — the client must first fetch the torrent metadata from peers. It may take a few minutes if the swarm is small. Use `/trackers/{hash}` to check tracker status.
-
-**Resume data lost after restart**
-
-Ensure you send `SIGTERM` (not `SIGKILL`) when stopping the process. `SIGKILL` bypasses the shutdown handler and does not save resume data. If using systemd, `systemctl stop` sends SIGTERM by default.
-
-**Web UI shows "View only" after login**
-
-Clear your browser cookies for the LimeTorrent domain and log in again.
-
----
-
 ## FAQ
 
 **Can I run LimeTorrent on Windows?**  
-The pre-built binary targets Ubuntu/Linux. You can run it from source on Windows if you install Python and the `libtorrent` Windows bindings, though this is not officially supported.
-
-**Is there a mobile app?**  
-No native app exists. The Web UI is responsive and works in mobile browsers.
-
-**Where is the configuration file?**  
-LimeTorrent is configured entirely via CLI arguments or environment variables. There is no config file by design — use a systemd unit or shell script to persist your preferred settings.
+Yes (tested on windows 11 23h2).
 
 **How do I change the API key?**  
 The API key is randomly generated at each startup. If you need a stable key, set a custom `WEBUI_PASS` and use session authentication, or manage the API key toggle via the Settings page in the Web UI.
