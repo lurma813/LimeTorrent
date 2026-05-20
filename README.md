@@ -94,10 +94,11 @@ For standard 64-bit desktops, servers, VMs, and most cloud instances (x86-64).
 
 ```bash
 # Download the binary
-wget https://github.com/lurma813/LimeTorrent/releases/latest/download/LimeTorrent-linux-amd64 -O LimeTorrent
+wget https://github.com/lurma813/LimeTorrent/releases/latest/download/LimeTorrent-linux-amd64.tgz -O LimeTorrent.tgz
+tar -xvzf LimeTorrent.tgz
 
 # Make it executable
-chmod +x LimeTorrent
+chmod u+rwx LimeTorrent
 
 # (Optional) Install system-wide
 sudo mv LimeTorrent /usr/local/bin/LimeTorrent
@@ -112,7 +113,8 @@ For 64-bit ARM boards and servers (AArch64): Raspberry Pi 3/4/5, Oracle Cloud Am
 
 ```bash
 # Download the ARM64 binary
-wget https://github.com/lurma813/LimeTorrent/releases/latest/download/LimeTorrent-linux-arm64 -O LimeTorrent
+wget https://github.com/lurma813/LimeTorrent/releases/latest/download/LimeTorrent-linux-arm64.tgz -O LimeTorrent.tgz
+tar -xvzf LimeTorrent.tgz
 
 # Make it executable
 chmod +x LimeTorrent
@@ -126,11 +128,10 @@ LimeTorrent
 
 ### Windows (amd64)
 
-For 64-bit Windows 10 / 11 (x86-64).
+For 64-bit Windows 10 / 11 (x64).
 
-1. Download `LimeTorrent-windows-amd64.exe` from the [Releases](https://github.com/lurma813/LimeTorrent/releases) page.
-2. Optionally rename it to `LimeTorrent.exe` and place it in a folder of your choice (e.g. `C:\LimeTorrent\`).
-3. Run it from Command Prompt or PowerShell:
+1. Download `LimeTorrent-windows-amd64.7z` from the [Releases](https://github.com/lurma813/LimeTorrent/releases) page.
+2. Extrack and run it from Command Prompt or PowerShell:
 
 ```cmd
 LimeTorrent.exe
