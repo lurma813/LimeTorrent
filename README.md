@@ -533,12 +533,33 @@ curl -X POST http://127.0.0.1:5000/postcmd/INFOHASH \
 
 **Environment variables available inside the command:**
 
+**Torrent-level** (always available):
+
 | Variable | Description |
 |---|---|
-| `TORRENT_HASH` | Info hash of the finished torrent |
+| `TORRENT_HASH` | Info hash of the finished torrent (40-char hex) |
 | `TORRENT_NAME` | Torrent display name |
-| `TORRENT_SAVE_PATH` | Absolute path where files were saved |
-| `TORRENT_SIZE` | Total size in bytes |
+| `TORRENT_SAVE_PATH` | Absolute path to the download destination directory |
+| `TORRENT_SIZE` | Total torrent size in bytes |
+| `TORRENT_FILE_COUNT` | Number of files inside the torrent |
+
+**Per-file** — indexed with `[i]` (zero-based, from `0` to `TORRENT_FILE_COUNT - 1`):
+
+| Variable | Description |
+|---|---|
+| `TORRENT_LISTFILE_NAME[i]` | Relative path of file *i* inside the torrent (from the torrent root) |
+| `TORRENT_LISTFILE_PATH[i]` | Absolute path of file *i* on disk (`TORRENT_SAVE_PATH + "/" + TORRENT_LISTFILE_NAME[i]`) |
+| `TORRENT_LISTFILE_SIZE[i]` | Size of file *i* in bytes |
+
+> **Bash note:** Because variable names contain literal `[` and `]` characters, use indirect expansion to read them:
+> ```bash
+> name_var="TORRENT_LISTFILE_NAME[$i]"
+> fname="${!name_var}"
+> ```
+> **Windows note:** Use `call set` with delayed expansion:
+> ```bat
+> call set "fname=%%TORRENT_LISTFILE_NAME[%%i]%%"
+> ```
 
 - Commands run in a shell (`sh -c` / `cmd /c`) with a **5-minute timeout**
 - `run_as` uses `setuid` to drop privileges — only works when LimeTorrent runs as root/sudo (Linux/macOS only; ignored on Windows)
